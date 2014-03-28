@@ -32,6 +32,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 import com.unity3d.player.UnityPlayer;
+import com.demo.xmppchat.Constants;
 
 public class XMPPChatDemo {
 
@@ -128,8 +129,9 @@ public class XMPPChatDemo {
 			}, filter);
 		}
 	}
-	public void pickupImage(){
+	public void pickupImage(String toUser){
 		Activity root = UnityPlayer.currentActivity;
+		Constants.receipient = toUser;
 		Intent i = new Intent(root, PickupImageActivity.class);
 		root.startActivity(i);
 	}
