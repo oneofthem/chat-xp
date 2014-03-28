@@ -60,7 +60,7 @@ public class XMPPChatDemoActivity extends Activity {
 	public static final String HOST = "sandbox-frienger.jinsei-iroiro.com";
 	public static final int PORT = 5222;
 	public static final String SERVICE = "sandbox-frienger.jinsei-iroiro.com";
-	public static final String USERNAME = "thangdepzai";
+	public static final String USERNAME = "test";
 	public static final String PASSWORD = "123456";
 	
 	/*
@@ -91,7 +91,7 @@ public class XMPPChatDemoActivity extends Activity {
 
 		recipient = (EditText) this.findViewById(R.id.toET);
 
-		recipient.setText("test@sandbox-frienger.jinsei-iroiro.com");
+		recipient.setText("thangdepzai@sandbox-frienger.jinsei-iroiro.com");
 		textMessage = (EditText) this.findViewById(R.id.chatET);
 		listview = (ListView) this.findViewById(R.id.listMessages);
 		imgUploadImage = (ImageView)findViewById(R.id.imgUploadImage);
@@ -151,11 +151,16 @@ public class XMPPChatDemoActivity extends Activity {
 						Log.i("XMPPChatDemoActivity", "Text Recieved " + message.getBody()+ " from " + fromName );
 						messages.add(fromName + ":");
 						messages.add(message.getBody());
-						Log.e("IMG URL 1 :", message.getBody().substring(0,7));
-						if(message.getBody().substring(0,7).equals("@image:")){
-							String imgUrl = message.getBody().substring(7,message.getBody().length() - 1);
-							Log.e("IMG URL 2 :", imgUrl);
-							saveImages(imgUrl);
+						if (message.getBody().length() >= 8) {
+							Log.e("IMG URL 1 :",
+									message.getBody().substring(0, 7));
+							if (message.getBody().substring(0, 7)
+									.equals("@image:")) {
+								String imgUrl = message.getBody().substring(7,
+										message.getBody().length() - 1);
+								Log.e("IMG URL 2 :", imgUrl);
+								saveImages(imgUrl);
+							}
 						}
 						// Add the incoming message to the list view
 						mHandler.post(new Runnable() {

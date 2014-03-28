@@ -16,6 +16,7 @@ import android.util.Log;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ResponseHeaderOverrides;
+import com.unity3d.player.UnityPlayer;
 
 public class S3GenerateImagePresignedUrlTask extends AsyncTask<Void, Void, S3TaskResult> {
 	
@@ -89,13 +90,19 @@ public class S3GenerateImagePresignedUrlTask extends AsyncTask<Void, Void, S3Tas
 			Log.e("HUHUHUHU",result.getUri().toString());
 			//textMessage.setText(result.getUri().toString());
 			String to = Constants.receipient;
-			if(to.equals(""))
-				to = "test@sandbox-frienger.jinsei-iroiro.com";
+			if(to.equals("")){
+				if(XMPPChatDemo.getInstance().USERNAME.equals("test"))
+					to = "thangdepzai@sandbox-frienger.jinsei-iroiro.com";
+				else
+					to = "test@sandbox-frienger.jinsei-iroiro.com";
+ 			}
 			String text = "@image:"+ result.getUri().toString() + "@";
 			Message msg = new Message(to, Message.Type.chat);
 			msg.setBody(text);
 			if (Constants.connection != null) {
 				Constants.connection.sendPacket(msg);
+				String content = "me" + "thang,khoa,ngoc,huy"  + text;
+				UnityPlayer.UnitySendMessage(XMPPChatDemo.XMPPObjet, XMPPChatDemo.XMPPMethod, content);
 				((Activity)context).finish();
 //				messages.add(Constants.connection.getUser() + ":");
 //				messages.add(text);

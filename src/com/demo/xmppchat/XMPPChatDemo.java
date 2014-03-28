@@ -39,8 +39,8 @@ public class XMPPChatDemo {
 	public static final String HOST = "sandbox-frienger.jinsei-iroiro.com";
 	public static final int PORT = 5222;
 	public static final String SERVICE = "sandbox-frienger.jinsei-iroiro.com";
-	public static final String USERNAME = "thangdepzai";
-	public static final String PASSWORD = "123456";
+	public String USERNAME = "thangdepzai";
+	public String PASSWORD = "123456";
 	
 	public static final String XMPPObjet = "XMPPObject";
 	public static final String XMPPMethod = "recieveMessage";
@@ -59,6 +59,12 @@ public class XMPPChatDemo {
 			_instance = new XMPPChatDemo();
 		return _instance;
 	}
+	
+	public void init(String username, String password){
+		this.USERNAME = username;
+		this.PASSWORD = password;
+	}
+	
 	
 	public XMPPChatDemo()
 	{
