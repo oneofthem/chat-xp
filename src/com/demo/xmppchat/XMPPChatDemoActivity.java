@@ -54,9 +54,8 @@ import android.widget.ListView;
 public class XMPPChatDemoActivity extends Activity {
 
 	String strVideo = "pchatupload";
-	private AmazonS3Client s3Client = new AmazonS3Client(
-			new BasicAWSCredentials(Constants.ACCESS_KEY_ID,
-					Constants.SECRET_KEY));
+	private AmazonS3Client s3Client = new AmazonS3Client(new BasicAWSCredentials(Constants.ACCESS_KEY_ID,Constants.SECRET_KEY));
+
 
 	public static final String HOST = "sandbox-frienger.jinsei-iroiro.com";
 	public static final int PORT = 5222;
@@ -64,15 +63,15 @@ public class XMPPChatDemoActivity extends Activity {
 	public static final String USERNAME = "thangdepzai";
 	public static final String PASSWORD = "123456";
 	
-
 	/*
-	public static final String HOST = "kt2xmpp.appspotchat.com";
+	public static final String HOST = "talk.google.com";
 	public static final int PORT = 5222;
-	public static final String SERVICE = "kt2xmpp.appspotchat.com";
-	public static final String USERNAME = "ngoc@kt2xmpp.appspotchat.com";
+	public static final String SERVICE = "gmail.com";
+	public static final String USERNAME = "cuongoihuhu@gmail.com";
 	public static final String PASSWORD = "";
 	*/
-	
+
+
 
 	private XMPPConnection connection;
 	private ArrayList<String> messages = new ArrayList<String>();
@@ -91,6 +90,7 @@ public class XMPPChatDemoActivity extends Activity {
 		setContentView(R.layout.main);
 
 		recipient = (EditText) this.findViewById(R.id.toET);
+
 		recipient.setText("test@sandbox-frienger.jinsei-iroiro.com");
 		textMessage = (EditText) this.findViewById(R.id.chatET);
 		listview = (ListView) this.findViewById(R.id.listMessages);
@@ -213,7 +213,7 @@ public class XMPPChatDemoActivity extends Activity {
 					Log.i("XMPPChatDemoActivity","Logged in as " + connection.getUser());
 
 					// Set the status to available
-					Presence presence = new Presence(Presence.Type.available);
+					//Presence presence = new Presence(Presence.Type.available);
 					setConnection(connection);
 					Constants.connection = connection;
 					
@@ -507,9 +507,11 @@ public class XMPPChatDemoActivity extends Activity {
 		  File SDCardRoot = Environment.getExternalStorageDirectory().getAbsoluteFile();
 		  String filename="Ishine"+System.currentTimeMillis()+".JPEG";   
 		  Log.i("Local filename:",""+filename);
-		  File file = new File(SDCardRoot+"/pchat/"+filename);
-		  //file.mkdirs();
-             
+		  File dir = new File(SDCardRoot+"/pchat/");
+		  if(!dir.exists()){
+			  dir.mkdirs();
+		  }
+          File file = new File(dir, filename);
 		  FileOutputStream fileOutput = new FileOutputStream(file);
 		  InputStream inputStream = urlConnection.getInputStream();
 		  int totalSize = urlConnection.getContentLength();

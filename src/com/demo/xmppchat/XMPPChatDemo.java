@@ -2,6 +2,12 @@ package com.demo.xmppchat;
 
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -23,22 +29,24 @@ import org.jivesoftware.smack.util.StringUtils;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Environment;
 import android.util.Log;
 import com.unity3d.player.UnityPlayer;
 
 public class XMPPChatDemo {
 
-	public static final String HOST = "talk.google.com";
+	public static final String HOST = "sandbox-frienger.jinsei-iroiro.com";
 	public static final int PORT = 5222;
-	public static final String SERVICE = "gmail.com";
-	public static final String USERNAME = "khoad4@gmail.com";
-	public static final String PASSWORD = "loithehipocrat";
+	public static final String SERVICE = "sandbox-frienger.jinsei-iroiro.com";
+	public static final String USERNAME = "thangdepzai";
+	public static final String PASSWORD = "123456";
 	
 	public static final String XMPPObjet = "XMPPObject";
 	public static final String XMPPMethod = "recieveMessage";
 
 	private XMPPConnection connection;
 	private ArrayList<String> messages = new ArrayList<String>();
+	//private Handler mHandler = new Handler();
 	
 	private static XMPPChatDemo _instance; 
 
@@ -64,12 +72,13 @@ public class XMPPChatDemo {
 		msg.setBody(content);				
 		if (connection != null) {
 			connection.sendPacket(msg);
+			String message = "me" + "thang,khoa,ngoc,huy"  + content;
 			messages.add(connection.getUser() + ":");
 			messages.add(content);
 			// TODO
 //			UnityPlayer.UnitySendMessage(arg0, arg1, arg2)
 			System.out.println("content : " + content );
-			UnityPlayer.UnitySendMessage("XMPPObject", "recieveMessage", content);
+			UnityPlayer.UnitySendMessage("XMPPObject", "recieveMessage", message);
 			
 			System.out.println(" send end "  );
 //			setListAdapter();
@@ -90,33 +99,35 @@ public class XMPPChatDemo {
 			connection.addPacketListener(new PacketListener() {
 				@Override
 				public void processPacket(Packet packet) {
-					System.out.println(packet.toXML());
 					Message message = (Message) packet;
 					if (message.getBody() != null) {
-						String fromName = StringUtils.parseBareAddress(message
-								.getFrom());
-						Log.i("XMPPChatDemoActivity", "Text Recieved " + message.getBody()
-								+ " from " + fromName );
+						String fromName = StringUtils.parseBareAddress(message.getFrom());
+						Log.i("XMPPChatDemoActivity", "Text Recieved " + message.getBody()+ " from " + fromName );
 						messages.add(fromName + ":");
 						messages.add(message.getBody());
-						String content = fromName + "thang,khoa,ngoc,huy"  + message.getBody();
-						System.out.println("========================= ");
-						System.out.println(content);
+						String msgBody = message.getBody();
+						Log.e("IMG URL 1 :", msgBody.substring(0,7));
+						Log.e("msgbody:", msgBody);
+						if(msgBody.substring(0,7).equals("@image:")){
+							String imgUrl = msgBody.substring(7,message.getBody().length() - 1);
+							Log.e("IMG URL 2 :", imgUrl);
+							//saveImages(imgUrl);
+							msgBody = imgUrl;
+							Log.e("img content:", msgBody );
+						}
+						String content = fromName + "thang,khoa,ngoc,huy"  + msgBody;
 						UnityPlayer.UnitySendMessage(XMPPObjet, XMPPMethod, content);
-						// Add the incoming message to the list view
+//						// Add the incoming message to the list view
 //						mHandler.post(new Runnable() {
 //							public void run() {
 //								setListAdapter();
 //							}
 //						});
-						// TODO 
 					}
 				}
 			}, filter);
 		}
 	}
-
-
 	public void pickupImage(){
 		Activity root = UnityPlayer.currentActivity;
 		Intent i = new Intent(root, PickupImageActivity.class);
@@ -215,4 +226,52 @@ public class XMPPChatDemo {
 		System.out.println("");
 //		dialog.show();
 	}
+	
+	public String saveImages(String inputUrl){
+		String filepath = "";
+		try{   
+		  URL url = new URL(inputUrl);
+		  HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+		  urlConnection.setRequestMethod("GET");
+		  urlConnection.setDoOutput(false);                   
+		  urlConnection.connect();                  
+		  File SDCardRoot = Environment.getExternalStorageDirectory().getAbsoluteFile();
+		  String filename="Ishine"+System.currentTimeMillis()+".JPEG";   
+		  Log.i("Local filename:",""+filename);
+		  File dir = new File(SDCardRoot+"/pchat/");
+		  if(!dir.exists()){
+			  dir.mkdirs();
+		  }
+          File file = new File(dir, filename);
+		  FileOutputStream fileOutput = new FileOutputStream(file);
+		  InputStream inputStream = urlConnection.getInputStream();
+		  int totalSize = urlConnection.getContentLength();
+		  int downloadedSize = 0;   
+		  byte[] buffer = new byte[1024];
+		  int bufferLength = 0;
+		  while ( (bufferLength = inputStream.read(buffer)) > 0 ) 
+		  {                 
+		    fileOutput.write(buffer, 0, bufferLength);                  
+		    downloadedSize += bufferLength;                 
+		    Log.i("Progress:","downloadedSize:"+downloadedSize+"totalSize:"+ totalSize) ;
+		  }             
+		  fileOutput.close();
+		  if(downloadedSize==totalSize) 
+			  filepath=file.getPath();    
+		} 
+		catch (MalformedURLException e) 
+		{
+		  e.printStackTrace();
+		} 
+		catch (IOException e)
+		{
+		  filepath=null;
+		  e.printStackTrace();
+		}
+		Log.i("filepath:"," "+filepath) ;
+		return filepath;
+
+	}
+	
+
 }
