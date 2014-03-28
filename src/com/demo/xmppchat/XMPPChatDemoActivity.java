@@ -58,11 +58,11 @@ public class XMPPChatDemoActivity extends Activity {
 			new BasicAWSCredentials(Constants.ACCESS_KEY_ID,
 					Constants.SECRET_KEY));
 
-	public static final String HOST = "talk.google.com";
+	public static final String HOST = "sandbox-frienger.jinsei-iroiro.com";
 	public static final int PORT = 5222;
-	public static final String SERVICE = "gmail.com";
-	public static final String USERNAME = "cuongoihuhu@gmail.com";
-	public static final String PASSWORD = "";
+	public static final String SERVICE = "sandbox-frienger.jinsei-iroiro.com";
+	public static final String USERNAME = "thangdepzai";
+	public static final String PASSWORD = "123456";
 	
 
 	/*
@@ -91,18 +91,22 @@ public class XMPPChatDemoActivity extends Activity {
 		setContentView(R.layout.main);
 
 		recipient = (EditText) this.findViewById(R.id.toET);
-		recipient.setText("cuongoihuhu@gmail.com");
+		recipient.setText("test@sandbox-frienger.jinsei-iroiro.com");
 		textMessage = (EditText) this.findViewById(R.id.chatET);
 		listview = (ListView) this.findViewById(R.id.listMessages);
 		imgUploadImage = (ImageView)findViewById(R.id.imgUploadImage);
 		setListAdapter();
-
+		
+		connect();
+		
 		imgUploadImage.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-				intent.setType("image/*");
-				startActivityForResult(intent, PHOTO_SELECTED);				
+//				Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//				intent.setType("image/*");
+//				startActivityForResult(intent, PHOTO_SELECTED);
+				Intent intent = new Intent(XMPPChatDemoActivity.this, PickupImageActivity.class);
+				startActivity(intent);
 			}
 		});
 		
@@ -124,8 +128,7 @@ public class XMPPChatDemoActivity extends Activity {
 				}
 			}
 		});
-
-		connect();
+		
 	}
 
 	/**
@@ -212,7 +215,7 @@ public class XMPPChatDemoActivity extends Activity {
 					// Set the status to available
 					Presence presence = new Presence(Presence.Type.available);
 					setConnection(connection);
-					
+					Constants.connection = connection;
 					
 					Roster roster = connection.getRoster();
 					Collection<RosterEntry> entries = roster.getEntries();
@@ -551,5 +554,9 @@ public class XMPPChatDemoActivity extends Activity {
 		}
 	}
 
-
+	public void pickupImage(Activity root){
+		Intent i = new Intent(root, PickupImageActivity.class);
+		root.startActivity(i);
+	}
+	
 }
