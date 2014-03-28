@@ -96,6 +96,7 @@ public class S3GenerateImagePresignedUrlTask extends AsyncTask<Void, Void, S3Tas
 			msg.setBody(text);
 			if (Constants.connection != null) {
 				Constants.connection.sendPacket(msg);
+				((Activity)context).finish();
 //				messages.add(Constants.connection.getUser() + ":");
 //				messages.add(text);
 				//setListAdapter();
