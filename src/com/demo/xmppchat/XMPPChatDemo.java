@@ -79,11 +79,20 @@ public class XMPPChatDemo {
 		msg.setBody(content);				
 		if (connection != null) {
 			connection.sendPacket(msg);
-			String message = "me" + "thang,khoa,ngoc,huy"  + content;
 			messages.add(connection.getUser() + ":");
 			messages.add(content);
 			// TODO
 //			UnityPlayer.UnitySendMessage(arg0, arg1, arg2)
+			if (content.length() >= 8) {
+				Log.e("IMG URL 1 :",content.substring(0, 7));
+				if (content.substring(0, 7).equals("@image:")) {
+					String imgUrl = content.substring(7,content.length() - 1);
+					Log.e("IMG URL 2 :", imgUrl);
+					//saveImages(imgUrl);
+					content = imgUrl;
+				}
+			}
+			String message = "me" + "thang,khoa,ngoc,huy"  + content;
 			System.out.println("content : " + content );
 			UnityPlayer.UnitySendMessage("XMPPObject", "recieveMessage", message);
 			

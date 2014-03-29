@@ -91,18 +91,23 @@ public class S3GenerateImagePresignedUrlTask extends AsyncTask<Void, Void, S3Tas
 			//textMessage.setText(result.getUri().toString());
 			String to = Constants.receipient;
 			if(to.equals("")){
-				if(XMPPChatDemo.getInstance().USERNAME.equals("test"))
-					to = "thangdepzai@sandbox-frienger.jinsei-iroiro.com";
-				else
-					to = "test@sandbox-frienger.jinsei-iroiro.com";
+				to = "thangdepzai@sandbox-frienger.jinsei-iroiro.com";
  			}
 			String text = "@image:"+ result.getUri().toString() + "@";
 			Message msg = new Message(to, Message.Type.chat);
 			msg.setBody(text);
 			if (Constants.connection != null) {
+				Log.e("IMG Action","body of msg:" + msg.getBody());
 				Constants.connection.sendPacket(msg);
+				Log.e("IMG Action","sent img: " + text + "to:" + to);
 				String content = "me" + "thang,khoa,ngoc,huy"  + text;
-				UnityPlayer.UnitySendMessage(XMPPChatDemo.XMPPObjet, XMPPChatDemo.XMPPMethod, content);
+				try{
+					UnityPlayer.UnitySendMessage(XMPPChatDemo.XMPPObjet, XMPPChatDemo.XMPPMethod, content);
+				}catch(ExceptionInInitializerError e){
+					e.printStackTrace();
+				}catch(NoClassDefFoundError e){
+					e.printStackTrace();
+				}
 				((Activity)context).finish();
 //				messages.add(Constants.connection.getUser() + ":");
 //				messages.add(text);
