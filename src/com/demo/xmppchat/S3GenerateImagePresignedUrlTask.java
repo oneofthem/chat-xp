@@ -100,7 +100,7 @@ public class S3GenerateImagePresignedUrlTask extends AsyncTask<Void, Void, S3Tas
 				Log.e("IMG Action","body of msg:" + msg.getBody());
 				Constants.connection.sendPacket(msg);
 				Log.e("IMG Action","sent img: " + text + "to:" + to);
-				String content = "me" + "thang,khoa,ngoc,huy"  + text;
+				String content = "me" + "thang,khoa,ngoc,huy"  + result.getUri().toString();
 				try{
 					UnityPlayer.UnitySendMessage(XMPPChatDemo.XMPPObjet, XMPPChatDemo.XMPPMethod, content);
 				}catch(ExceptionInInitializerError e){
